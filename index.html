@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Erica ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS resets and variables */
+        :root {
+            --primary: #ff758c;
+            --secondary: #ff7eb3;
+            --bg-top: #ffe2e2;
+            --bg-bottom: #fff0f0;
+            --text-dark: #4a4a4a;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* prevents scrollbars due to moving elements */
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 117, 140, 0.2), 0 5px 15px rgba(0,0,0,0.05);
+            max-width: 90%;
+            width: 500px;
+            position: relative;
+            z-index: 10;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-placeholder {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 10px 20px rgba(255, 117, 140, 0.3);
+            border: 4px solid white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Hide until you add an actual image source */
+        }
+
+        /* Shows when no image is loaded */
+        .photo-text {
+            padding: 20px;
+            opacity: 0.9;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin: 0 0 15px 0;
+            text-shadow: 2px 2px 4px rgba(255, 117, 140, 0.2);
+        }
+
+        .message-container {
+            min-height: 100px; /* Pre-allocate space to avoid layout shifts */
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 0;
+            display: inline-block;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1rem;
+            background-color: var(--primary);
+            animation: blink 1s linear infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .question.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            min-height: 60px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .buttons.show {
+            opacity: 1;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            outline: none;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            z-index: 2; /* Keep it above the other button */
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
+        }
+
+        .btn-no {
+            background-color: var(--white);
+            color: var(--text-dark);
+            position: relative; 
+            z-index: 1;
+        }
+
+        .success-message {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s forwards;
+        }
+
+        .success-message h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Floating Background Hearts */
+        .hearts-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-style-heart {
+            position: absolute;
+            background-color: var(--primary);
+            transform: rotate(45deg);
+            animation: float 10s infinite linear;
+            opacity: 0.3;
+        }
+
+        .bg-style-heart::before,
+        .bg-style-heart::after {
+            content: '';
+            position: absolute;
+            background-color: inherit;
+            border-radius: 50%;
+        }
+
+        .bg-style-heart::before {
+            top: -50%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-style-heart::after {
+            top: 0;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(45deg) scale(0.8); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.3; }
+            100% { transform: translateY(-100px) rotate(45deg) scale(1.2); opacity: 0; }
+        }
+
+        /* Victory state celebration hearts */
+        .celebration-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            transform: rotate(45deg);
+            animation: explode 1.5s ease-out forwards;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .celebration-heart::before,
+        .celebration-heart::after {
+            content: '';
+            position: absolute;
+            background-color: inherit;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+        }
+
+        .celebration-heart::before { top: -50%; left: 0; }
+        .celebration-heart::after { top: 0; left: -50%; }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0) rotate(45deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(45deg) scale(0); opacity: 0; }
+        }
+
+        /* Audio controls */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+            color: var(--primary);
+            transition: 0.3s;
+            opacity: 0.5; /* Initally dull to indicate it's off */
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 3rem; }
+            .message { font-size: 1rem; }
+            .container { padding: 30px 20px; }
+            button { padding: 10px 20px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <button class="music-btn" id="musicBtn" aria-label="Play Music">🎵</button>
+    
+    <!-- Autoplay disabled initially to comply with modern browser rules, but we try playing on first interaction -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_512a868516.mp3?filename=romantic-background-music-112398.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container" id="mainContainer">
+        <!-- Photo Placeholder -->
+        <div class="photo-placeholder">
+            <!-- Add a real image path here inside src="" when ready, and remove display: none from CSS -->
+            <img src="" alt="Erica's Photo" id="photoImg">
+            <div class="photo-text" id="photoText">Her Photo</div>
+        </div>
+
+        <h1>Hey Erica ❤️</h1>
+        
+        <div class="message-container">
+            <p class="message"><span id="typingText"></span><span class="cursor" id="cursor"></span></p>
+        </div>
+
+        <div class="question" id="questionText">Will you be my Valentine? 💖</div>
+
+        <div class="buttons" id="buttonsContainer">
+            <button class="btn-yes" id="yesBtn">YES 💕</button>
+            <button class="btn-no" id="noBtn">NO 🙈</button>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h2>You just made me the happiest person alive 😍❤️</h2>
+            <p>I can't wait to spend this special day with you! ✨💕</p>
+        </div>
+    </div>
+
+    <script>
+        // Typing Effect logic
+        const message = "Ever since we met, you've made my days brighter. You never fail to make me smile, and my heart feels something so truly special whenever I think of you...";
+        const typingText = document.getElementById('typingText');
+        const cursor = document.getElementById('cursor');
+        const questionText = document.getElementById('questionText');
+        const buttonsContainer = document.getElementById('buttonsContainer');
+        
+        let i = 0;
+
+        window.onload = function() {
+            createBackgroundHearts();
+            setTimeout(typeWriter, 800);
+        };
+
+        function typeWriter() {
+            if (i < message.length) {
+                typingText.innerHTML += message.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50); // Speed of typing
+            } else {
+                setTimeout(() => {
+                    cursor.style.display = 'none';
+                    questionText.classList.add('show');
+                    
+                    // Show buttons right after the question
+                    setTimeout(() => {
+                        buttonsContainer.classList.add('show');
+                    }, 800);
+                }, 500);
+            }
+        }
+
+        // Float background hearts
+        function createBackgroundHearts() {
+            const bg = document.getElementById('heartsBg');
+            
+            // Create initial batch
+            for (let j = 0; j < 15; j++) {
+                spawnHeart(bg, true);
+            }
+
+            // Continuously spawn hearts
+            setInterval(() => {
+                spawnHeart(bg, false);
+            }, 1500);
+        }
+
+        function spawnHeart(container, isInitial) {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-style-heart');
+            
+            const leftPos = Math.random() * 100;
+            const size = Math.random() * 12 + 10; // Between 10px and 22px
+            const delay = isInitial ? Math.random() * 10 : 0;
+            const duration = Math.random() * 6 + 7; // 7s to 13s
+            
+            heart.style.left = leftPos + 'vw';
+            heart.style.width = size + 'px';
+            heart.style.height = size + 'px';
+            heart.style.animationDelay = delay + 's';
+            heart.style.animationDuration = duration + 's';
+            
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, (duration + delay) * 1000);
+        }
+
+        // --- Button Interactions ---
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        // Escaping 'No' button
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton);
+
+        function moveButton() {
+            const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Generate random X and Y, but keep it on screen
+            const maxX = vw - btnRect.width - 20;
+            const maxY = vh - btnRect.height - 20;
+            
+            const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.transition = 'all 0.2s ease-out';
+        }
+
+        // Agree 'Yes' button
+        yesBtn.addEventListener('click', () => {
+            // Hide the initial state carefully
+            document.querySelector('.photo-placeholder').classList.add('hidden');
+            document.querySelector('h1').classList.add('hidden');
+            document.querySelector('.message-container').classList.add('hidden');
+            questionText.classList.add('hidden');
+            buttonsContainer.classList.add('hidden');
+            
+            if(noBtn.style.position === 'fixed') {
+                 noBtn.classList.add('hidden');
+            }
+
+            // Show success text
+            successMessage.style.display = 'flex';
+            
+            triggerConfetti();
+        });
+
+        // Confetti / Hearts Explosion
+        function triggerConfetti() {
+            const colors = ['#ff758c', '#ff7eb3', '#fca3b7', '#ffb6c1'];
+            
+            for (let j = 0; j < 80; j++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('celebration-heart');
+                    
+                    // Pick random warm color
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Start in the center
+                    confetti.style.left = '50vw';
+                    confetti.style.top = '50vh';
+                    
+                    // Explode outward radially
+                    const tx = (Math.random() - 0.5) * 600 + 'px';
+                    const ty = (Math.random() - 0.5) * 600 + 'px';
+                    
+                    confetti.style.setProperty('--tx', tx);
+                    confetti.style.setProperty('--ty', ty);
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 1500);
+                }, j * 15);
+            }
+        }
+
+        // --- Music Controls ---
+        const musicBtn = document.getElementById('musicBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        let isPlaying = false;
+        
+        bgMusic.volume = 0.25; 
+
+        musicBtn.addEventListener('click', () => {
+            toggleMusic();
+        });
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicBtn.textContent = '🎵';
+                musicBtn.style.opacity = '0.5';
+            } else {
+                bgMusic.play().catch(e => console.log("Music play prevented:", e));
+                musicBtn.textContent = '🎶';
+                musicBtn.style.opacity = '1';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Try to start music on the first interaction anywhere on screen
+        document.body.addEventListener('click', () => {
+            if(!isPlaying) {
+               bgMusic.play().then(() => {
+                   isPlaying = true;
+                   musicBtn.textContent = '🎶';
+                   musicBtn.style.opacity = '1';
+               }).catch(e => console.log("First auto-play interaction blocked:", e));
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
